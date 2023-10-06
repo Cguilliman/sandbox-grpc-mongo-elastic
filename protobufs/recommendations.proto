@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+enum BookCategory {
+    MYSTERY = 0;
+    SCIENCE_FICTION = 1;
+    SELF_HELP = 2;
+}
+
+message RecommendationRequest {
+    BookCategory category = 2;
+}
+
+message BookRecommendation {
+    string id = 1;
+    string title = 2;
+    BookCategory category = 3;
+}
+
+message RecommendationResponse {
+    repeated Book books = 1;
+}
+
+message CreateBookRequest {
+    optional string title = 3;
+    optional BookCategory category = 2;
+}
+
+message UpdateBookRequest {
+    string id = 1;
+    string title = 3;
+    BookCategory category = 2;
+}
+
+message Book {
+    string id = 1;
+    string title = 2;
+    BookCategory category = 3;
+    google.protobuf.Timestamp created_at = 4;
+    google.protobuf.Timestamp updated_at = 5;
+}
+
+message BookModifiedResponse {
+    Book books = 1;
+}
+
+message EmptyRequest {}
+
+message EmptyResponse {}
+
+message BookDeleteRequest {
+    string id = 1;
+}
+
+message BookSearchRequest {
+    string search = 1;
+}
+
+message BookSearchResponse {
+    repeated Book books = 1;
+}
+
+service Books {
+    rpc Recommend (RecommendationRequest) returns (RecommendationResponse);
+    rpc Create (CreateBookRequest) returns (Book);
+    rpc Update (UpdateBookRequest) returns (Book);
+    rpc Monitor (EmptyRequest) returns (stream Book);
+    rpc Delete (BookDeleteRequest) returns (EmptyResponse);
+    rpc Search (BookSearchRequest) returns (BookSearchResponse);
+}
+
+//service BooksModify {
+//    rpc Modify (BookRequest) returns (BookModifiedResponse);
+//}
+
+
+//service BooksMonitor {
+//    rpc Monitor (EmptyRequest) returns (stream Book);
+//}
